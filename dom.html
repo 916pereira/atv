@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Página Interativa com DOM</title>
+  <style>
+    :root {
+      --fundo: #f5f7fb;
+      --texto: #1d2939;
+      --cartao: #ffffff;
+      --destaque: #2563eb;
+    }
+
+    body.modo-escuro {
+      --fundo: #111827;
+      --texto: #f9fafb;
+      --cartao: #1f2937;
+      --destaque: #60a5fa;
+    }
+
+    body {
+      background: var(--fundo);
+      color: var(--texto);
+      font-family: Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      transition: background 0.25s, color 0.25s;
+    }
+
+    main {
+      background: var(--cartao);
+      width: min(90%, 480px);
+      padding: 32px;
+      border-radius: 12px;
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.15);
+    }
+
+    label, input, button {
+      font-size: 16px;
+    }
+
+    input {
+      box-sizing: border-box;
+      width: 100%;
+      margin: 8px 0 14px;
+      padding: 10px;
+      border: 1px solid #9ca3af;
+      border-radius: 6px;
+    }
+
+    button {
+      background: var(--destaque);
+      color: white;
+      border: 0;
+      border-radius: 6px;
+      padding: 10px 16px;
+      cursor: pointer;
+      margin-right: 8px;
+            min-height: 24px;
+      font-weight: bold;
+      margin-top: 22px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Página Interativa</h1>
+    <p>Informe seu nome para receber uma mensagem personalizada.</p>
+
+    <label for="nome">Nome:</label>
+    <input id="nome" type="text" placeholder="Digite seu nome">
+
+    <button id="enviar" type="button">Enviar</button>
+    <button id="alternarTema" type="button">Ativar modo escuro</button>
+
+    <p id="mensagem" aria-live="polite"></p>
+  </main>
+
+  <script>
+   
+    const campoNome = document.getElementById("nome");
+    const botaoEnviar = document.getElementById("enviar");
+    const botaoTema = document.getElementById("alternarTema");
+    const mensagem = document.getElementById("mensagem");
+
+   
+    botaoEnviar.addEventListener("click", function () {
+      const nome = campoNome.value.trim();
+
+      mensagem.textContent = nome
+        ? `Olá, ${nome}! Seja bem-vindo(a) à página.`
+        : "Por favor, digite seu nome.";
+    });
+
+  
+    botaoTema.addEventListener("click", function () {
+      document.body.classList.toggle("modo-escuro");
+
+      const modoEscuroAtivo = document.body.classList.contains("modo-escuro");
+      botaoTema.textContent = modoEscuroAtivo
+        ? "Ativar modo claro"
+        : "Ativar modo escuro";
+         });
+  </script>
+</body>
+</html>
