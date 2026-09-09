@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Operações Matemáticas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 620px;
+      margin: 48px auto;
+      padding: 0 20px;
+      line-height: 1.6;
+    }
+
+    button {
+      padding: 10px 16px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Calculadora simples</h1>
+  <p>Os resultados das operações aparecerão abaixo.</p>
+
+  <button onclick="darBoasVindas()">Boas-vindas</button>
+
+  <script>
+    const numero1 = Number(prompt("Digite o primeiro número:"));
+    const numero2 = Number(prompt("Digite o segundo número:"));
+
+    const soma = numero1 + numero2;
+    const subtracao = numero1 - numero2;
+    const multiplicacao = numero1 * numero2;
+    const divisao = numero2 !== 0 ? numero1 / numero2 : "Não é possível dividir por zero";
+
+    
+    document.write("<h2>Resultados</h2>");
+    document.write("<p>Soma: " + soma + "</p>");
+    document.write("<p>Subtração: " + subtracao + "</p>");
+    document.write("<p>Multiplicação: " + multiplicacao + "</p>");
+    document.write("<p>Divisão: " + divisao + "</p>");
+
+    
+    console.log("Soma:", soma);
+    console.log("Subtração:", subtracao);
+    console.log("Multiplicação:", multiplicacao);
+    console.log("Divisão:", divisao);
+
+    function darBoasVindas() {
+      alert("Boas-vindas ao site!");
+    }
+  </script>
+</body>
+</html>
