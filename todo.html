@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minha Lista de Tarefas</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #e0e7ff, #f8fafc);
+      color: #1e293b;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .app {
+      width: min(100%, 620px);
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 18px 45px rgba(30, 41, 59, 0.18);
+      overflow: hidden;
+    }
+
+    header {
+      background: #4f46e5;
+      color: white;
+      padding: 28px;
+    }
+
+    h1 { margin: 0; font-size: clamp(1.6rem, 5vw, 2rem); }
+    header p { margin: 8px 0 0; opacity: 0.9; }
+
+    main { padding: 24px; }
+
+    .nova-tarefa {
+      display: flex;
+      gap: 10px;
+    }
+
+    input {
+      flex: 1;
+      min-width: 0;
+      padding: 13px;
+      border: 2px solid #cbd5e1;
+      border-radius: 9px;
+        font: inherit;
+    }
+
+    input:focus { outline: 3px solid #c7d2fe; border-color: #4f46e5; }
+
+    button {
+      border: 0;
+      border-radius: 9px;
+      padding: 12px 16px;
+      font: inherit;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.15s, background 0.15s;
+    }
+
+    button:hover { transform: translateY(-1px); }
+    .adicionar { background: #4f46e5; color: #fff; }
+    .adicionar:hover { background: #4338ca; }
+
+    .cabecalho-lista {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin: 24px 0 12px;
+    }
+
+    .contador { color: #64748b; font-size: 0.92rem; }
+    .limpar { background: #fee2e2; color: #b91c1c; }
+    .limpar:hover { background: #fecaca; }
+
+    ul { list-style: none; padding: 0; margin: 0; }
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 10px;
+      animation: aparecer 0.2s ease-out;
+    }
+
+    .texto-tarefa { flex: 1; overflow-wrap: anywhere; }
+    .remover { background: transparent; color: #dc2626; padding: 8px; }
+    .remover:hover { background: #fee2e2; }
+
+    .vazio {
+      text-align: center;
+       color: #64748b;
+      padding: 28px 10px;
+      border: 2px dashed #cbd5e1;
+      border-radius: 10px;
+    }
+
+    .mensagem { min-height: 22px; margin: 10px 0 0; color: #b91c1c; font-size: 0.9rem; }
+
+    @keyframes aparecer {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 12px; }
+      header, main { padding: 20px; }
+      .nova-tarefa { flex-direction: column; }
+      .adicionar { width: 100%; }
+      .cabecalho-lista { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <section class="app" aria-labelledby="titulo">
+    <header>
+      <h1 id="titulo">✓ Minha lista de tarefas</h1>
+      <p>Organize o seu dia com tranquilidade.</p>
+    </header>
+
+    <main>
+      <form id="formTarefa" class="nova-tarefa">
+        <input id="campoTarefa" type="text" maxlength="120" placeholder="Digite uma nova tarefa" aria-label="Nova tarefa" autocomplete="off">
+        <button class="adicionar" type="submit">Adicionar</button>
+      </form>
+      <p id="mensagem" class="mensagem" role="alert"></p>
+
+      <div class="cabecalho-lista">
+        <span id="contador" class="contador">0 tarefas</span>
+        <button id="limparTudo" class="limpar" type="button">Limpar todas</button>
+      </div>
+
+      <ul id="listaTarefas" aria-live="polite"></ul>
+       </main>
+  </section>
+
+  <script>
+    const CHAVE_STORAGE = "minhasTarefas";
+    const form = document.getElementById("formTarefa");
+    const campo = document.getElementById("campoTarefa");
+    const lista = document.getElementById("listaTarefas");
+    const contador = document.getElementById("contador");
+    const mensagem = document.getElementById("mensagem");
+    const botaoLimpar = document.getElementById("limparTudo");
+
+    
+    function obterTarefas() {
+      return JSON.parse(localStorage.getItem(CHAVE_STORAGE)) || [];
+    }
+
+    
+    function salvarTarefas(tarefas) {
+      localStorage.setItem(CHAVE_STORAGE, JSON.stringify(tarefas));
+    }
+
+    function renderizarTarefas() {
+      const tarefas = obterTarefas();
+      lista.innerHTML = "";
+      contador.textContent = `${tarefas.length} ${tarefas.length === 1 ? "tarefa" : "tarefas"}`;
+      botaoLimpar.disabled = tarefas.length === 0;
+
+      if (tarefas.length === 0) {
+        const itemVazio = document.createElement("li");
+        itemVazio.className = "vazio";
+        itemVazio.textContent = "Nenhuma tarefa cadastrada. Adicione a primeira acima!";
+        lista.appendChild(itemVazio);
+        return;
+      }
+
+      tarefas.forEach((tarefa, indice) => {
+        const item = document.createElement("li");
+        const texto = document.createElement("span");
+        const botaoRemover = document.createElement("button");
+
+        texto.className = "texto-tarefa";
+        texto.textContent = tarefa;
+        botaoRemover.className = "remover";
+        botaoRemover.type = "button";
+        botaoRemover.textContent = "Remover";
+        botaoRemover.setAttribute("aria-label", `Remover tarefa: ${tarefa}`);
+        botaoRemover.addEventListener("click", () => removerTarefa(indice));
+
+        item.append(texto, botaoRemover);
+        lista.appendChild(item);
+      });
+    }
+
+    function removerTarefa(indice) {
+      const tarefas = obterTarefas();
+      tarefas.splice(indice, 1);
+      salvarTarefas(tarefas);
+      renderizarTarefas();
+    }
+
+    form.addEventListener("submit", evento => {
+      evento.preventDefault();
+      const novaTarefa = campo.value.trim();
+
+      if (!novaTarefa) {
+        mensagem.textContent = "Digite uma tarefa antes de adicionar.";
+        campo.focus();
+        return;
+      }
+
+      const tarefas = obterTarefas();
+       tarefas.push(novaTarefa);
+      salvarTarefas(tarefas);
+      campo.value = "";
+      mensagem.textContent = "";
+      renderizarTarefas();
+      campo.focus();
+    });
+
+    botaoLimpar.addEventListener("click", () => {
+      if (obterTarefas().length && confirm("Deseja remover todas as tarefas?")) {
+        localStorage.removeItem(CHAVE_STORAGE);
+        renderizarTarefas();
+      }
+    });
+
+    renderizarTarefas();
+  </script>
+</body>
+</html>
