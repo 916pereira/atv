@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="refresh" content="10">
+  <title>Cotação do dólar • USD/BRL</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <main class="dashboard">
+    <header>
+      <span class="eyebrow">PAINEL DE MOEDAS</span>
+      <h1>Cotação do dólar<span>.</span></h1>
+      <p>Acompanhe o dólar americano em reais.</p>
+    </header>
+
+    <section class="quote" aria-labelledby="quote-title">
+      <div class="quote-heading">
+        <div class="pair"><span class="currency-icon" aria-hidden="true">$</span><div><h2 id="quote-title">USD / BRL</h2><p>Dólar americano → Real brasileiro</p></div></div>
+        <span class="refresh-label">Atualização a cada 10s</span>
+      </div>
+      <div class="current">
+        <p class="label">VALOR ATUAL · COMPRA</p>
+        <p id="current-value" class="current-value">—</p>
+        <p class="unit">Valor de 1 dólar em reais</p>
+      </div>
+      <div class="daily-values">
+        <article><p class="label"><span class="arrow" aria-hidden="true">↗</span> Maior valor do dia</p><p id="high-value" class="daily-value">—</p></article>
+        <article><p class="label"><span class="arrow" aria-hidden="true">↘</span> Menor valor do dia</p><p id="low-value" class="daily-value">—</p></article>
+      </div>
+      <div class="status-row"><p id="status" role="status" aria-live="polite">Consultando cotação…</p><button type="button" onclick="window.location.reload()">Atualizar agora <span aria-hidden="true">↻</span></button></div>
+       <p id="quote-time" class="quote-time"></p>
+    </section>
+    <footer><p>Fonte: <a href="https://docs.awesomeapi.com.br/api-de-moedas" target="_blank" rel="noopener noreferrer">AwesomeAPI</a></p><p>A página recarrega a cada 10 segundos. A API pública pode manter os dados em cache por até 1 minuto.</p></footer>
+  </main>
+</body>
+</html>
